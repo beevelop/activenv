@@ -1,0 +1,17 @@
+MYSQL_ROOT_PASSWORD:
+  description: Your MySQL root password (change for production)
+  default: Un1c0rn
+  required: true
+  regex: [a-zA-Z0-1]
+
+MYSQL_DATABASE:
+  description: The Name of the MySQL database to use
+  default: directus
+  required: true
+  regex: [a-zA-Z0-1]
+
+MYSQL_USER:
+  description: Optionally define the MySQL username
+  default: directus
+  required: false
+  regex: [a-zA-Z0-1]
