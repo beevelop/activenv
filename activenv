@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+source bashbooster.sh
+
+ACTIVENV_VERSION="0.0.1"
+
+# Hey there evil $0...
+ProgName=$(basename $0)
+DIR="$(dirname "$(readlink -f "$0")")"
+
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+sub_help() {
+    echo "Usage: $ProgName COMMAND [options]"
+    echo ""
+    echo "Commands:"
+    echo "    SUBCOMMAND    OPTION   Description"
+    echo -e "${RED}"
+    echo "RED"
+    echo -e "${NC}"
+    echo ""
+}
+
+sub_yaml() {
+	bb-read-yaml ".activenv" "activenv"
+	#compgen -A variable
+}
+
+parr() {
+ 	local key value name
+	for name in "$@"; do
+		echo '('
+		eval "
+		for key in \"\${!$name[@]}\"; do
+			value=\${$name[\$key]}
+			echo -e \"\\t[\$key]=\\\`\$value\\\`\"
+		done"
+		echo ')'
+	done
+}
+
+sub=$1
+case $sub in
+    "" | "-h" | "--help")
+        sub_help
+        ;;
+    *)
+        shift
+        sub_${sub} $@
+        if [ $? = 127 ]; then
+            echo "Error: '$sub' is not a known subcommand." >&2
+            echo "       Run '$ProgName --help' for a list of known subcommands." >&2
+            echo "       If you think this command is missing, feel free to contribute." >&2
+            echo "       http://github.com/beevelop/dckr" >&2
+            exit 1
+        fi
+        ;;
+esac
